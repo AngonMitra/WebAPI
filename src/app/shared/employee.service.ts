@@ -1,0 +1,44 @@
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { Designation, Employee } from './employee.model';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class EmployeeService {
+
+  constructor(private myhttp:HttpClient) { }
+  employeeUrl:string='https://localhost:44363/api/Employees';
+  designationUrl:string='https://localhost:44363/api/Designations';
+  listEmp:Employee[]=[];       // for getting data
+  listDeg:Designation[]=[];
+
+  empData:Employee = new Employee(); //for post/insert data
+
+  saveEmployee(){
+
+    return this.myhttp.post(this.employeeUrl, this.empData);
+
+  }
+
+  updateEmployee(){
+
+    return this.myhttp.put(`${this.employeeUrl}/${this.empData.id}` ,this.empData);
+  }
+
+  getEmployee():Observable<Employee[]>
+  {
+       return this.myhttp.get<Employee[]>(this.employeeUrl);
+  }
+
+  getDesignation():Observable<Designation[]>
+  {
+    return this.myhttp.get<Designation[]>(this.designationUrl);
+  }
+
+  deleteEmployee(id:number)
+  {
+    return this.myhttp.delete(`${this.employeeUrl}/${id}`);
+  }
+}
